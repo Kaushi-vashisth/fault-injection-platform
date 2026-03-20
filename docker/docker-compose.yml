@@ -1,0 +1,102 @@
+networks:
+  platform_net:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  prometheus_data:
+
+services:
+
+  service_a:
+    build:
+      context: ./service_a
+    container_name: service_a
+    ports:
+      - "8000:8000"
+    networks:
+      - platform_net
+    depends_on:
+      - service_b
+    restart: on-failure
+
+  service_b:
+    build:
+      context: ./service_b
+    container_name: service_b
+    ports:
+      - "8001:8001"
+    networks:
+      - platform_net
+    depends_on:
+      - service_c
+    restart: on-failure
+
+  service_c:
+    build:
+      context: ./service_c
+    container_name: service_c
+    ports:
+      - "8002:8002"
+    networks:
+      - platform_net
+    depends_on:
+      - mongodb
+    restart: on-failure
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - platform_net
+
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - platform_net
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.retention.time=7d'
+
+  grafana:
+    image: grafana/grafana:10.1.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=research123
+    networks:
+      - platform_net
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.50
+    container_name: jaeger
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+    networks:
+      - platform_net
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.88.0
+    container_name: otel-collector
+    volumes:
+      - ../observability/otel/otel-collector-config.yml:/etc/otel-collector-config.yml
+    command: ["--config=/etc/otel-collector-config.yml"]
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    networks:
+      - platform_net
+    depends_on:
+      - jaeger

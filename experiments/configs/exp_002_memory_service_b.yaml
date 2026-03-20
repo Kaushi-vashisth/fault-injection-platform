@@ -1,0 +1,15 @@
+experiment_id: "exp_002"
+description: "Memory exhaustion on Service B"
+warmup_sec: 10
+baseline_sec: 20
+fault_duration_sec: 30
+recovery_window_sec: 20
+fault:
+  type: "memory"
+  target: "service_b"
+  params:
+    vm_workers: 1
+    vm_bytes_mb: 100
+    duration_sec: 30
+repeat: 1
+inter_run_cooldown_sec: 30

@@ -1,0 +1,19 @@
+experiment_id: "exp_001"
+description: "CPU stress on Service B — moderate load"
+version: "1.0"
+
+warmup_sec: 30
+baseline_sec: 60
+fault_duration_sec: 60
+recovery_window_sec: 60
+
+fault:
+  type: "cpu"
+  target: "service_b"
+  params:
+    cpu_workers: 2
+    load_percent: 80
+    duration_sec: 60
+
+repeat: 1
+inter_run_cooldown_sec: 30

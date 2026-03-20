@@ -1,0 +1,16 @@
+experiment_id: "exp_003"
+description: "Network latency on Service B"
+warmup_sec: 10
+baseline_sec: 20
+fault_duration_sec: 30
+recovery_window_sec: 20
+fault:
+  type: "network"
+  target: "service_b"
+  params:
+    delay_ms: 200
+    jitter_ms: 20
+    loss_percent: 0.0
+    duration_sec: 30
+repeat: 1
+inter_run_cooldown_sec: 30

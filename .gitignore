@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+*.pkl
+
+# Node
+dashboard/node_modules/
+dashboard/dist/
+
+# Data files
+dashboard/public/data.json
+validation/comparison_results.json
+
+# ML models (too large)
+analytics/ml/trained_model.pkl
+analytics/ml/trained_scaler.pkl
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db

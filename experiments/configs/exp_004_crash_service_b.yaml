@@ -1,0 +1,16 @@
+experiment_id: "exp_004"
+description: "Service crash on Service B"
+warmup_sec: 10
+baseline_sec: 20
+fault_duration_sec: 30
+recovery_window_sec: 20
+fault:
+  type: "crash"
+  target: "service_b"
+  params:
+    crash_mode: "SIGKILL"
+    recovery_delay_sec: 5
+    auto_restart: true
+    duration_sec: 0
+repeat: 1
+inter_run_cooldown_sec: 30
